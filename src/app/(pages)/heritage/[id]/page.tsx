@@ -1,4 +1,4 @@
-import { AddHeritageSheet } from "@/components/add-heritage-sheet";
+import { AddHeritageSheet } from "@/components/add-conquered-heritage-sheet";
 import { HeritageCard } from "@/components/heritage-card";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
 
