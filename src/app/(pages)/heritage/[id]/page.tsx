@@ -1,4 +1,4 @@
-import { AddHeritageSheet } from "@/components/add-conquered-heritage-sheet";
+import { AddConqueredHeritageSheet } from "@/components/add-conquered-heritage-sheet";
 import { HeritageCard } from "@/components/heritage-card";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
 
@@ -11,7 +11,7 @@ export default function HeritageIdPage() {
           Patrimônios Conquistados:
         </p>
         <div className="flex flex-wrap gap-4">
-          <AddHeritageSheet />
+          <AddConqueredHeritageSheet />
           <HeritageCard icon={`\u{1F3E0}`} label="Apto." value={800000} />
         </div>
       </div>
