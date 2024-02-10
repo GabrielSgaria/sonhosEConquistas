@@ -12,6 +12,7 @@ import { EmojiPicker } from "./emoji-picker";
 import { useState } from "react";
 import { $Enums } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { createHeritage } from "@/lib/actions";
 
 interface AddWantedHeritageSheetProps {
   open: boolean;
@@ -22,40 +23,47 @@ export function AddWantedHeritageSheet({
   open,
   onOpenChange,
 }: AddWantedHeritageSheetProps) {
-  const router = useRouter();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState("");
   const [heritageName, setHeritageName] = useState("");
   const [heritageValue, setHeritageValue] = useState("");
 
   async function handleCreateWantedHeritage() {
     try {
+      setIsLoading(true);
       if (!selectedEmoji) {
         throw new Error("Selecione o emoji");
       }
       if (!heritageName) {
         throw new Error("Preencha o nome");
       }
-
-      const newHeritage = await fetch("/api/heritages", {
-        method: "POST",
-        body: JSON.stringify({
-          emoji: selectedEmoji,
-          name: heritageName,
-          value: heritageValue ? parseFloat(heritageValue) : 0,
-          stage: $Enums.Stage.WANTED,
-        }),
+      await createHeritage({
+        emoji: selectedEmoji,
+        name: heritageName,
+        value: heritageValue ? parseFloat(heritageValue) : 0,
+        stage: $Enums.Stage.WANTED,
       });
-      const data = await newHeritage.json();
-      console.log(data);
+
+      // const newHeritage = await fetch("/api/heritages", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     emoji: selectedEmoji,
+      //     name: heritageName,
+      //     value: heritageValue ? parseFloat(heritageValue) : 0,
+      //     stage: $Enums.Stage.WANTED,
+      //   }),
+      // });
+      // const data = await newHeritage.json();
+      // console.log(data);
 
       setSelectedEmoji("");
       setHeritageName("");
       setHeritageValue("");
       onOpenChange(false);
-      router.refresh();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -104,8 +112,9 @@ export function AddWantedHeritageSheet({
           </div>
 
           <button
+            disabled={isLoading}
             onClick={handleCreateWantedHeritage}
-            className="ml-auto rounded-md bg-black px-6 py-2 text-sm font-semibold text-white hover:bg-black/50"
+            className="ml-auto rounded-md bg-black px-6 py-2 text-sm font-semibold text-white hover:bg-black/50 disabled:opacity-50 disabled:hover:bg-black"
           >
             Salvar
           </button>

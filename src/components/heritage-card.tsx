@@ -1,7 +1,10 @@
 "use client";
+import { deleteHeritage } from "@/lib/actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
+import { LuLoader2 } from "react-icons/lu";
 
 interface HeritageCardProps {
   icon: string;
@@ -11,17 +14,16 @@ interface HeritageCardProps {
 }
 
 export function HeritageCard({ icon, label, value, id }: HeritageCardProps) {
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleDeleteHeritage() {
     try {
-      await fetch(`/api/heritages/${id}`, {
-        method: "DELETE",
-      });
-
-      router.refresh;
+      setIsLoading(true);
+      await deleteHeritage(id);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -32,10 +34,12 @@ export function HeritageCard({ icon, label, value, id }: HeritageCardProps) {
           <FiEdit3 />
         </button>
         <button
+          disabled={isLoading}
           onClick={handleDeleteHeritage}
           className="rounded p-0.5 transition-colors hover:bg-zinc-700"
         >
-          <FiTrash2 />
+          
+          {isLoading ? <LuLoader2 className="animate-spin" /> : <FiTrash2 />}
         </button>
       </div>
       <Link href={`/heritage/${id}`}>

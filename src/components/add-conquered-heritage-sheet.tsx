@@ -97,7 +97,7 @@ export function AddConqueredHeritageSheet({
               onChange={(e) => setHeritageName(e.target.value)}
             />
           </div>
-
+          
           <div className="flex flex-col space-y-1">
             <label className="text-sm font-semibold">Valor do patrimônio</label>
             <input
