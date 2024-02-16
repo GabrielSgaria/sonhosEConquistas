@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ptBR } from "@clerk/localizations"
+import { dark } from "@clerk/themes";
+import { ConfettiProvider } from "@/providers/confetti-provider";
 
 const dmSans = DM_Sans({ subsets: ["latin"] });
 
@@ -15,8 +19,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={dmSans.className}>{children}</body>
-    </html>
+    <ClerkProvider localization={ptBR} appearance={{baseTheme: dark}}>
+      <html lang="en">
+        <body className={dmSans.className}>
+          <ConfettiProvider/>
+          {children}
+          </body>
+      </html>
+    </ClerkProvider>
   );
 }

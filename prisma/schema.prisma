@@ -17,6 +17,7 @@ enum Stage{
 
 model Heritage {
   id        String   @id @default(uuid())
+  userId    String   
   emoji     String
   name      String
   value     Int

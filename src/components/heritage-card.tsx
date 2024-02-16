@@ -5,15 +5,19 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
 import { LuLoader2 } from "react-icons/lu";
+import { ChangeHeritageStageButton } from "./change-heritage-stage-button";
+import { $Enums } from "@prisma/client";
+import { UpdateHeritageButton } from "./update-heritage-button";
 
 interface HeritageCardProps {
   icon: string;
   label: string;
   value: number;
   id: string;
+  stage: $Enums.Stage
 }
 
-export function HeritageCard({ icon, label, value, id }: HeritageCardProps) {
+export function HeritageCard({ icon, label, value, id, stage }: HeritageCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleDeleteHeritage() {
@@ -29,18 +33,22 @@ export function HeritageCard({ icon, label, value, id }: HeritageCardProps) {
 
   return (
     <div className="h-48 min-w-60 select-none rounded bg-zinc-800 transition-all hover:bg-zinc-800/80 hover:font-semibold">
-      <div className="flex justify-end gap-x-1 px-3 py-2">
-        <button className="rounded p-0.5 transition-colors hover:bg-zinc-700">
-          <FiEdit3 />
-        </button>
-        <button
-          disabled={isLoading}
-          onClick={handleDeleteHeritage}
-          className="rounded p-0.5 transition-colors hover:bg-zinc-700"
-        >
+      <div className="flex p-2">
+
+        <ChangeHeritageStageButton id={id} name={label} emoji={icon} value={value} stage={stage}/>
+
+        <div className="ml-auto flex gap-x-1">
           
-          {isLoading ? <LuLoader2 className="animate-spin" /> : <FiTrash2 />}
-        </button>
+          <UpdateHeritageButton id={id}/>
+
+          <button
+            disabled={isLoading}
+            onClick={handleDeleteHeritage}
+            className="rounded p-0.5 transition-colors hover:bg-zinc-700"
+          >
+            {isLoading ? <LuLoader2 className="animate-spin" /> : <FiTrash2 />}
+          </button>
+        </div>
       </div>
       <Link href={`/heritage/${id}`}>
         <div className="flex flex-col items-center justify-center gap-y-4">

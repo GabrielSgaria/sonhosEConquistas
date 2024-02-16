@@ -1,6 +1,8 @@
 "use server";
 
 import { db } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs";
+import { $Enums } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 interface GetHeritages {
@@ -16,9 +18,15 @@ interface CreateHeritageProps {
 }
 
 export async function getHeritages(params: GetHeritages) {
+  const { userId } = auth();
+  if (!userId) {
+    console.log({ error: "Você precisa estar logado!" })
+    return[]
+  }
   return await db.heritage.findMany({
     where: {
       stage: params.stage,
+      userId,
     },
     orderBy: {
       createdAt: "desc",
@@ -36,10 +44,15 @@ export async function getHeritagesById(id: string) {
 }
 
 export async function createHeritage(data: CreateHeritageProps) {
+  const { userId } = auth();
+  if (!userId) {
+    return { error: "Você precisa estar logado!" };
+  }
   try {
     const valueInCents = data.value * 100;
     await db.heritage.create({
       data: {
+        userId,
         emoji: data.emoji,
         name: data.name,
         value: valueInCents,
@@ -53,10 +66,69 @@ export async function createHeritage(data: CreateHeritageProps) {
 }
 
 export async function deleteHeritage(id: string) {
+  const { userId } = auth();
+  if (!userId) {
+    return { error: "Você precisa estar logado!" };
+  }
   try {
     await db.heritage.delete({
       where: {
         id,
+        userId,
+      },
+    });
+  } catch (error) {
+    console.log("erro");
+  }
+  revalidatePath("/heritage");
+}
+
+export async function changeHeritageStage(
+  newStage: "CONQUERED" | "WANTED",
+  id: string,
+) {
+  const { userId } = auth();
+  if (!userId) {
+    return { error: "Você precisa estar logado!" };
+  }
+  try {
+    await db.heritage.update({
+      where: {
+        id,
+        userId,
+      },
+      data: {
+        stage: newStage,
+      },
+    });
+  } catch (error) {
+    console.log("erro");
+  }
+  revalidatePath("/heritage");
+}
+
+interface UpdateHeritageProps {
+  id: string;
+  name: string;
+  value: number;
+  emoji: string;
+}
+
+export async function updateHeritage(data: UpdateHeritageProps) {
+  const { userId } = auth();
+  if (!userId) {
+    return { error: "Você precisa estar logado!" };
+  }
+  try {
+    await db.heritage.update({
+      where: {
+        id: data.id,
+        userId,
+      },
+      data: {
+        emoji: data.emoji,
+        name: data.name,
+        value: data.value,
       },
     });
   } catch (error) {

@@ -11,7 +11,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Link from "next/link";
-import { getHeritages } from "@/actions/get-heritages";
+import { getHeritages } from "@/lib/actions";
 import { AddWantedHeritageButton } from "@/components/add-wanted-heritage-button";
 
 export default async function HeritagePage() {
@@ -53,6 +53,7 @@ export default async function HeritagePage() {
                       className="pl-4 md:basis-1/2 lg:basis-1/3"
                     >
                       <HeritageCard
+                        stage={heritage.stage}
                         icon={heritage.emoji}
                         label={heritage.name}
                         value={heritage.value}
@@ -107,6 +108,7 @@ export default async function HeritagePage() {
                       className="pl-4 md:basis-1/2 lg:basis-1/3"
                     >
                       <HeritageCard
+                        stage={heritage.stage}
                         icon={heritage.emoji}
                         label={heritage.name}
                         value={heritage.value}

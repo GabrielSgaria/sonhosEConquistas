@@ -1,4 +1,4 @@
-import { getHeritagesById } from "@/actions/get-heritages";
+import { getHeritagesById } from "@/lib/actions";
 import { AddConqueredHeritageSheet } from "@/components/add-conquered-heritage-sheet";
 import { HeritageCard } from "@/components/heritage-card";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
