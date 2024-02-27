@@ -15,6 +15,7 @@ import { getHeritages } from "@/lib/actions";
 import { AddWantedHeritageButton } from "@/components/add-wanted-heritage-button";
 
 export default async function HeritagePage() {
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   const [conqueredHeritages, wantedHeritages] = await Promise.all([
     getHeritages({ stage: "CONQUERED", max: 10 }),
     getHeritages({ stage: "WANTED", max: 10 }),

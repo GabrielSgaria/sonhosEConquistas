@@ -20,8 +20,8 @@ interface CreateHeritageProps {
 export async function getHeritages(params: GetHeritages) {
   const { userId } = auth();
   if (!userId) {
-    console.log({ error: "Você precisa estar logado!" })
-    return[]
+    console.log({ error: "Você precisa estar logado!" });
+    return [];
   }
   return await db.heritage.findMany({
     where: {
@@ -135,4 +135,29 @@ export async function updateHeritage(data: UpdateHeritageProps) {
     console.log("erro");
   }
   revalidatePath("/heritage");
+}
+
+export async function getHeritagesToChart() {
+  try {
+    const conquered = await db.heritage.count({
+      where: {
+        stage: "CONQUERED",
+      },
+    });
+    const wanted = await db.heritage.count({
+      where: {
+        stage: "WANTED",
+      },
+    });
+    return {
+      conquered,
+      wanted,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      conquered: 0,
+      wanted: 0,
+    };
+  }
 }
